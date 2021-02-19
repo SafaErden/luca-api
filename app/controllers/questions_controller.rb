@@ -1,15 +1,10 @@
 class QuestionsController < ApplicationController
-  before_action :authorized
+  before_action :authorized, only: [:create]
   before_action :set_question, only: [:show]
   # GET /questions
   def index
     @questions = Question.all
-    render json: @questions
-  end
-
-  # GET /questions/1
-  def show
-    render json: @question
+    render json: { questions: @questions }
   end
 
   # POST /questions
