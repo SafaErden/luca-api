@@ -1,35 +1,22 @@
 class StarsController < ApplicationController
-  before_action :set_star, only: [:show, :update, :destroy]
-
-  # GET /stars
-  def index
-    @stars = Star.all
-
-    render json: @stars
-  end
-
-  # GET /stars/1
-  def show
-    render json: @star
-  end
-
+  before_action :set_star, only: [:destroy]
+  
   # POST /stars
   def create
-    @star = Star.new(star_params)
-
-    if @star.save
-      render json: @star, status: :created, location: @star
+    @star = Star.find_by('user_id = ? AND question_id= ?', User.first.id, params[:id])
+    if @star
+      if @star.destroy
+        render json: {  star: "unstar" }
+      else
+        render json: { error: 'not_found'}
+      end
     else
-      render json: @star.errors, status: :unprocessable_entity
-    end
-  end
-
-  # PATCH/PUT /stars/1
-  def update
-    if @star.update(star_params)
-      render json: @star
-    else
-      render json: @star.errors, status: :unprocessable_entity
+      stars = Star.new(user_id: User.first.id, question_id: params[:id])
+      if stars.save 
+        render json: {  star: "star" }
+      else
+        render json: { error: 'not_found'}
+      end
     end
   end
 
@@ -46,6 +33,6 @@ class StarsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def star_params
-      params.fetch(:star, {})
+      params.require(:star).permit(:id)
     end
 end

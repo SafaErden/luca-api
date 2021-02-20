@@ -1,18 +1,27 @@
 class QuestionsController < ApplicationController
-  before_action :authorized, only: [:create]
+  include StarHelper
   before_action :set_question, only: [:show]
   # GET /questions
   def index
-    @questions = Question.all
-    render json: { questions: @questions }
+    @questions = Question.all.order(created_at: :desc)
+    res = @questions.map do |q|  
+      {
+        id: q.id,
+        title: q.title,
+        body: q.body,
+        stared: star?(q.id),
+        comments: (100 * rand()).floor() 
+      }
+    end
+    render json: { questions: res }
   end
 
   # POST /questions
   def create
-    @question = Question.new(question_params)
-
+    @question = User.first.questions.build(question_params)
     if @question.save
-      render json: { question: @question }
+      @questions = Question.all.order(created_at: :desc)
+      render json: { questions: @questions }
     else
       render json: { error: @question.errors.full_messages[0] }
     end
