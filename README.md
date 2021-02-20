@@ -56,7 +56,7 @@ Clone [this](https://github.com/SafaErden/luca-api.git) repo
 
 Contributions, issues and feature requests are welcome!
 
-Feel free to check the [issues page](https://github.com/SafaErden/Appointment-API/issues)
+Feel free to check the [issues page](https://github.com/SafaErden/luca-api/issues)
 
 ## Show your support
 
